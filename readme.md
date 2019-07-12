@@ -6,7 +6,7 @@ A set of exercies to prepare for the [Certified Kubernetes Administrator (CKA) P
 The Certified Kubernetes Administrator (CKA) program was created by The Linux Foundation and the Cloud Native Computing Foundation (CNCF)
 as a part of their ongoing effort to help develop the Kubernetes ecosystem. 
 
-Note that the Kubernetes v1.14 is used for the excercises.
+Note that the **Kubernetes v1.14** is used for the excercises.
 
 ## Domains & Competencies
 
