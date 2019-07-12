@@ -1,4 +1,4 @@
-## Understand deployments and how to perform rolling update and rollbacks
+## 1. Understand deployments and how to perform rolling update and rollbacks
 ### Create the DaemonSet with nginx image, update the ds with newer version of the nginx server, change the updateStrategy to OnDelete
 <details><summary>show</summary>
 <p>
@@ -82,18 +82,18 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
 </details>
 
 
-## Know various ways to configure applications
-## Know how to scale applications
+## 2. Know various ways to configure applications
+## 3. Know how to scale applications
 ### Create the Deployment with nginx image, scale the Deployment to replicas=3
 <details><summary>show</summary>
 <p>
   
 ```bash
 kubectl create deployment nginx --image=nginx
-kubectl scale deployment nginx  --replicas=3
+kubectl scale deployment nginx --replicas=3
 ```
 
 </p>
 </details>
 
-## Understand the primitives necessary to create a self-healing application
+## 4. Understand the primitives necessary to create a self-healing application
