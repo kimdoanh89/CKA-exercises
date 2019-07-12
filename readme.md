@@ -1,4 +1,4 @@
-# CKAD Exercises
+# Certified Kubernetes Administrator (CKA) Exercises
 
 ## Overview
 A set of exercies to prepare for the [Certified Kubernetes Administrator (CKA) Program](https://www.cncf.io/certification/cka/). 
