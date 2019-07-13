@@ -11,7 +11,7 @@ Enter root and update, upgrade the system
 sudo -i
 apt-get update && apt-get upgrade -y
 ```
-Install docker 
+[Install docker](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker) 
 ```bash
 apt-get install -y docker.io
 ```
@@ -69,6 +69,10 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permane
 <details><summary>show</summary>
 <p>
   
+[Install docker](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker) 
+```bash
+apt-get install -y docker.io
+```
 Similar to master installation with less commands.
 ```bash
 sudo -i
