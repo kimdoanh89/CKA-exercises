@@ -62,6 +62,27 @@ source <(kubectl completion bash) # setup autocomplete in bash into the current 
 echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
 ```
 
+</p>
+</details>
+
+### 2.2. Install worker
+<details><summary>show</summary>
+<p>
+  
+Similar to master installation with less commands.
+```bash
+sudo -i
+apt-get update && sudo apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+apt-get update
+apt-get install -y kubeadm=1.14.1-00 kubelet=1.14.1-00 kubectl=1.14.1-00
+```
+Need to [turn off all swap devices](https://serverfault.com/questions/684771/best-way-to-disable-swap-in-linux) before joining the cluster using the output of kubeadm init above
+```bash
+kubeadm join 10.0.2.15:6443 --token m3jpro.pvufj1envk6mx3g5 \
+    --discovery-token-ca-cert-hash sha256:822885260222721f04296d96d490ddf9de568cd3507b735a1c21a5185755042e
+```
 
 </p>
 </details>
