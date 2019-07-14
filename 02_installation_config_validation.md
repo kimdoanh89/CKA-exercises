@@ -63,6 +63,7 @@ kubeadm join 10.0.2.15:6443 --token m3jpro.pvufj1envk6mx3g5 \
 ```
 Exit root and following instructions for the regular user
 ```bash
+exit
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
