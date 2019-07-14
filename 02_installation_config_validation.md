@@ -14,6 +14,22 @@ apt-get update && apt-get upgrade -y
 [Install docker](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker) 
 ```bash
 apt-get install -y docker.io
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+mkdir -p /etc/systemd/system/docker.service.d
+
+# Restart docker.
+systemctl daemon-reload
+systemctl restart docker
 ```
 Add new repo for kubernetes
 ```bash
@@ -53,7 +69,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 Copy calico.yaml file from root to regular user space, and apply the calico file with kubectl
 ```bash
-cp /root/calico.yaml .
+sudo cp /root/calico.yaml .
 kubectl apply -f calico.yaml
 ```
 Apply [kubectl autocompletion ](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete)
