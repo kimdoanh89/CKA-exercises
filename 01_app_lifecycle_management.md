@@ -103,8 +103,24 @@ kubectl scale deployment nginx --replicas=3
 ```bash
 kubectl autoscale deployment nginx --min=2 --max=5 --cpu-percent=80
 kubectl get hpa
+```
+See the hpa settings:
+```bash
 kubectl describe hpa
-kubectl delete hpa
+```
+You can notice that the warning:
+```bash 
+ScalingActive  False   FailedGetResourceMetric  the HPA was unable to compute the replica count: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+```
+You need to install [metrics-server](https://github.com/kubernetes-incubator/metrics-server).
+```bash
+git clone https://github.com/kubernetes-incubator/metrics-server
+kubectl create -f metrics-server/deploy/1.8+/
+# edit metric-server deployment to add the flags
+# args:
+# - --kubelet-insecure-tls
+# - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+$ kubectl edit deploy -n kube-system metrics-server
 ```
 
 </p>
