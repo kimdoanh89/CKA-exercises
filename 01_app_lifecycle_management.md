@@ -84,13 +84,24 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
 
 ## 2. Know various ways to configure applications
 ## 3. Know how to scale applications
-### Create the Deployment with nginx image, scale the Deployment to replicas=3
+### Create the Deployment with nginx image, scale to replicas=3
 <details><summary>show</summary>
 <p>
   
 ```bash
 kubectl create deployment nginx --image=nginx
 kubectl scale deployment nginx --replicas=3
+```
+
+</p>
+</details>
+
+### Change the deployment to autoscale, the number of nginx replicas ranging from 1 to 3
+<details><summary>show</summary>
+<p>
+  
+```bash
+kubectl autoscale deployment nginx --min=1 --max=3
 ```
 
 </p>
