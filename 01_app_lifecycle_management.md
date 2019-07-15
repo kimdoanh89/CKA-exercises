@@ -96,12 +96,15 @@ kubectl scale deployment nginx --replicas=3
 </p>
 </details>
 
-### Change the deployment to autoscale, the number of nginx replicas ranging from 1 to 3
+### Change the deployment to autoscale, with target CPU utilization set to 80% and the number of replicas between 2 and 5. 
 <details><summary>show</summary>
 <p>
   
 ```bash
-kubectl autoscale deployment nginx --min=1 --max=3
+kubectl autoscale deployment nginx --min=2 --max=5 --cpu-percent=80
+kubectl get hpa
+kubectl describe hpa
+kubectl delete hpa
 ```
 
 </p>
