@@ -82,6 +82,28 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permane
 </p>
 </details>
 
+<details><summary>note for installing local using VirtualBox</summary>
+<p>
+  
+Follow some instructions [here](https://github.com/kubernetes/kubernetes/issues/58876). The problem is the ip used in kubeadm join instruction. Kubeadm has generated the ip of NAT interface and the correct ip is the ip of master host.
+
+In general, get the IP Addresses of the Nodes. For example:
+- Master - 20.0.0.11/24
+- Worker1 - 20.0.0.21/24
+
+Run the below command on master:
+```bash
+kubeadm init --apiserver-advertise-address=20.0.0.11 --pod-network-cidr=192.168.0.0/16
+```
+The output should be something like:
+```bash
+kubeadm join 20.0.0.11:6443 --token 5pfs0f.70axkqvb6jzte28i \
+    --discovery-token-ca-cert-hash sha256:f0a201b4355a3ed345f055afa1f0a70ade9ee8048bab6641fbbb779c3653bc9b
+```
+
+</p>
+</details>
+
 ### 2.2. Install worker
 <details><summary>show</summary>
 <p>
