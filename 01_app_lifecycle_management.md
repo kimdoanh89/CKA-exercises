@@ -122,6 +122,7 @@ kubectl create -f metrics-server/deploy/1.8+/
 # - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
 $ kubectl edit deploy -n kube-system metrics-server
 ```
+![metric-server-args](https://github.com/kubernetes-incubator/metrics-server/blob/master/deploy/minikube/metric-server-args.png)
 
 </p>
 </details>
