@@ -4,16 +4,17 @@
 <details><summary>show</summary>
 <p>
   
-Follow [instructions using native packages management](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-using-native-package-management)
+Follow [instructions using native packages management](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-using-native-package-management). In more details:
 
-Enter root and update, upgrade the system
+Enter root and update, upgrade the system.
 ```bash
 sudo -i
 apt-get update && apt-get upgrade -y
 ```
-[Install docker](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker) 
+Follow instructions to [install docker](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker). 
 ```bash
 apt-get install -y docker.io
+
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -31,49 +32,49 @@ mkdir -p /etc/systemd/system/docker.service.d
 systemctl daemon-reload
 systemctl restart docker
 ```
-Add new repo for kubernetes
+Add new repo for kubernetes.
 ```bash
 vim /etc/apt/sources.list.d/kubernetes.list
 ```
 ```vim
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 ```
-Add a GPG key for the package, and update with new repo
+Add a GPG key for the package, and update with new repo.
 ```bash
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 apt-get update
 ```
-Install kubeadm, kubelet, and kubectl
+Install kubeadm, kubelet, and kubectl.
 ```bash
 apt-get install -y kubeadm=1.14.1-00 kubelet=1.14.1-00 kubectl=1.14.1-00
 ```
-Install Container Networking Interface (CNI). Follows intrustions to use [Calico for Network Policy](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/)
-Download calico.yaml file. Looking for the CALICO_IPv4POOL_CIDR. Note that the default is 192.168.0.0/16. If you are using a different pod CIDR, change it accordingly in the calico.yaml file.
+Install Container Networking Interface (CNI). Follows intrustions to use [Calico for Network Policy](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/). Download calico.yaml file. Looking for the CALICO_IPv4POOL_CIDR. Note that the default is 192.168.0.0/16. If you are using a different pod CIDR, change it accordingly in the calico.yaml file.
 ```bash
 wget https://docs.projectcalico.org/v3.8/manifests/calico.yaml
 cat calico.yaml | grep -a2 CIDR
 ```
-Need to [turn off all swap devices](https://serverfault.com/questions/684771/best-way-to-disable-swap-in-linux) before initalize the master. Initialize the master using the following command. Save the kubeadm join output to use when adding workers to the cluster.
+Need to [turn off all swap devices](https://serverfault.com/questions/684771/best-way-to-disable-swap-in-linux) before initalizing the master. Initialize the master using the following command. 
 ```bash
 kubeadm init --kubernetes-version=1.14.1 --pod-network-cidr=192.168.0.0/16 | tee kubeadm-init.out
 ```
+Save the kubeadm join output to use when adding workers to the cluster.
 ```bash
 kubeadm join 10.0.2.15:6443 --token m3jpro.pvufj1envk6mx3g5 \
     --discovery-token-ca-cert-hash sha256:822885260222721f04296d96d490ddf9de568cd3507b735a1c21a5185755042e
 ```
-Exit root and following instructions for the regular user
+Exit root and following instructions for the regular user.
 ```bash
 exit
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
-Copy calico.yaml file from root to regular user space, and apply the calico file with kubectl
+Copy calico.yaml file from root to regular user space, and apply the calico file with kubectl.
 ```bash
 sudo cp /root/calico.yaml .
 kubectl apply -f calico.yaml
 ```
-Apply [kubectl autocompletion ](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete)
+Apply [kubectl autocompletion ](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete).
 ```bash
 source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
 echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
@@ -82,7 +83,7 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permane
 </p>
 </details>
 
-<details><summary>note for installing local using VirtualBox</summary>
+<details><summary>notes for installing locally using VirtualBox</summary>
 <p>
   
 Follow some instructions [here](https://github.com/kubernetes/kubernetes/issues/58876). The problem is the ip used in kubeadm join instruction. Kubeadm has generated the ip of NAT interface and the correct ip is the ip of master host.
@@ -93,7 +94,7 @@ In general, get the IP Addresses of the Nodes. For example:
 
 Run the below command on master:
 ```bash
-kubeadm init --apiserver-advertise-address=20.0.0.11 --pod-network-cidr=192.168.0.0/16
+kubeadm init --apiserver-advertise-address=20.0.0.11 --kubernetes-version=1.14.1 --pod-network-cidr=192.168.0.0/16 | tee kubeadm-init.out
 ```
 The output should be something like:
 ```bash
@@ -108,10 +109,8 @@ kubeadm join 20.0.0.11:6443 --token 5pfs0f.70axkqvb6jzte28i \
 <details><summary>show</summary>
 <p>
   
-[Install docker](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker) 
-```bash
-apt-get install -y docker.io
-```
+Install docker similarly as above in Master.
+
 Similar to master installation with less commands.
 ```bash
 sudo -i
@@ -121,7 +120,7 @@ echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/
 apt-get update
 apt-get install -y kubeadm=1.14.1-00 kubelet=1.14.1-00 kubectl=1.14.1-00
 ```
-Need to [turn off all swap devices](https://serverfault.com/questions/684771/best-way-to-disable-swap-in-linux) before joining the cluster using the output of kubeadm init above
+Need to [turn off all swap devices](https://serverfault.com/questions/684771/best-way-to-disable-swap-in-linux) before joining the cluster using the output of kubeadm init above.
 ```bash
 kubeadm join 10.0.2.15:6443 --token m3jpro.pvufj1envk6mx3g5 \
     --discovery-token-ca-cert-hash sha256:822885260222721f04296d96d490ddf9de568cd3507b735a1c21a5185755042e
