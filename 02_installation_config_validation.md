@@ -101,7 +101,10 @@ The output should be something like:
 kubeadm join 20.0.0.11:6443 --token 5pfs0f.70axkqvb6jzte28i \
     --discovery-token-ca-cert-hash sha256:f0a201b4355a3ed345f055afa1f0a70ade9ee8048bab6641fbbb779c3653bc9b
 ```
-Another problem of using VirtualBox: [Fix 1](https://github.com/kubernetes/kubeadm/issues/203) OR [Fix 2](https://medium.com/@joatmon08/playing-with-kubeadm-in-vagrant-machines-part-2-bac431095706).
+**Another problem of using VirtualBox:**
+
+[Fix 1](https://github.com/kubernetes/kubeadm/issues/203#issuecomment-478206793) OR [Fix 2](https://medium.com/@joatmon08/playing-with-kubeadm-in-vagrant-machines-part-2-bac431095706).
+
 Add "--node-ip" to '/var/lib/kubelet/kubeadm-flags.env':
 ```bash
 cat /var/lib/kubelet/kubeadm-flags.env
