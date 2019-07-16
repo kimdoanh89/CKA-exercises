@@ -101,9 +101,9 @@ The output should be something like:
 kubeadm join 20.0.0.11:6443 --token 5pfs0f.70axkqvb6jzte28i \
     --discovery-token-ca-cert-hash sha256:f0a201b4355a3ed345f055afa1f0a70ade9ee8048bab6641fbbb779c3653bc9b
 ```
-**Another problem of using VirtualBox:**
+**Another problem of using VirtualBox:** 
 
-[Fix 1](https://github.com/kubernetes/kubeadm/issues/203#issuecomment-478206793) OR [Fix 2](https://medium.com/@joatmon08/playing-with-kubeadm-in-vagrant-machines-part-2-bac431095706).
+This happens if you're running a multi-box setup because the kubelet on the workers end up binding services to the wrong ethernet interface. This error is the master attempting a connection to the wrong address in order to pull logs. The fix is to modify the config for the kubelet, as described in: [Fix 1](https://github.com/kubernetes/kubeadm/issues/203#issuecomment-478206793) OR [Fix 2](https://medium.com/@joatmon08/playing-with-kubeadm-in-vagrant-machines-part-2-bac431095706).
 
 Add "--node-ip" to '/var/lib/kubelet/kubeadm-flags.env':
 ```bash
