@@ -70,6 +70,8 @@ kubectl get nodes
 </details>
 
 ## 2. Facilitate operating system upgrades
+<details><summary>show</summary>
+<p>
 
 During maintenance, when we need to take down a node, it is important to keep the service running by evicting the pods on that node, moving it to another node. After maintenance, you can continue to schedule pods on that node.
 
@@ -81,9 +83,13 @@ kubectl get nodes
 ```
 In case of failure, the node needs to be deleted, you can just as easily remove the node and replace it with a new one, joining it to the cluster.
 ```bash
+kubectl drain worker1 --ignore-daemonsets --delete-local-data
+kubectl get nodes
 kubectl delete node worker1
 kubeadm token create --print-join-command
 ```
 
+</p>
+</details>
 
 ## 3. Implement backup and restore methodologies
