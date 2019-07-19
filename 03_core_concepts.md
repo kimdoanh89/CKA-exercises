@@ -60,13 +60,23 @@ kubectl edit svc nginx
 </p>
 </details>
 
-
-### Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379
+### Create a pod redis with image redis:alpine and label tier=db
 <details><summary>show</summary>
 <p>
 
 ```bash
-kubectl expose pod redis --name redis-service --port=6379 
+kubectl run redis --generator=run-pod/v1 --image=redis:alpine -l tier=db
+```
+
+</p>
+</details>
+
+### Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379 with the label tier=db
+<details><summary>show</summary>
+<p>
+
+```bash
+kubectl expose pod redis --name redis-service --port=6379 -l tier=db
 ```
 
 </p>
