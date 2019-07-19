@@ -24,6 +24,54 @@ kubectl run nginx --generator=run-pod/v1 --image=nginx --dry-run -o yaml > nginx
 </p>
 </details>
 
+### Generate Deployment YAML file (-o yaml). Don't create it(--dry-run) with 4 Replicas (--replicas=4)
+<details><summary>show</summary>
+<p>
+
+```bash
+kubectl create deployment nginx --image=nginx --dry-run -o yaml > nginx-deployment.yaml
+```
+Open the nginx-deployment.yaml file that is created and modify replicas: 4
+    
+</p>
+</details>
+
+### Create a Service named nginx of type NodePort to expose deployment nginx's port 80 on port 30080 on the nodes:
+<details><summary>solusion 1</summary>
+<p>
+
+```bash
+kubectl expose deploy nginx --type=NodePort --port=80 --dry-run -o yaml > nginx-service.yaml
+```
+Open and modify the file nginx-service.yaml, to add nodePort: 30080
+
+</p>
+</details>
+
+<details><summary>solusion 2</summary>
+<p>
+
+Expose deployment nginx, this way the nodePort is randomly choosen between 30000-32767 , then use kubectl edit to modify the port of the service to nodePort: 30080
+```bash
+kubectl expose deploy nginx --type=NodePort --port=80 
+kubectl edit svc nginx
+```
+
+</p>
+</details>
+
+
+### Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379
+<details><summary>show</summary>
+<p>
+
+```bash
+kubectl expose pod redis --name redis-service --port=6379 
+```
+
+</p>
+</details>
+
 
 ## 2.Understand the Kubernetes cluster architecture
 ## 3.Understand Services and other network primitives
