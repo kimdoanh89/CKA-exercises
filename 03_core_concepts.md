@@ -1,4 +1,6 @@
 ## 1. Understand the Kubernetes API primitives
+API overview is [here](https://kubernetes.io/docs/reference/using-api/api-overview/).
+
 All the Kubernetes API reference is [here](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/).
 
 All the kubectl commands reference is [here](https://v1-14.docs.kubernetes.io/docs/reference/generated/kubectl/kubectl-commands).
