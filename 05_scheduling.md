@@ -206,11 +206,14 @@ kubectl edit deployment my-deployment
   
 Show the kubelet service.
 ```bash  
-systemctl show kubelet.service
+sudo systemctl cat kubelet.service
+sudo systemctl status kubelet.service
 ```
 find the --config option
 ```bash
-Environment=KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf\x20--kubeconfig=/etc/kubernetes/kubelet.conf KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+
+Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
 ```
 Look in to the file /var/lib/kubelet/config.yaml, looking for staticPodPath
 ```bash
