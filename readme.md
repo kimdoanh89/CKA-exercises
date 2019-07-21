@@ -24,3 +24,6 @@ The CKA Certification exam includes these general domains and their weights on t
 - [Troubleshooting – 10%](10_troubleshooting.md)
 
 ## References
+
+## Tips
+- Be familiar with systemd. A good reference is [here](https://www.digitalocean.com/community/tutorials/systemd-essentials-working-with-services-units-and-the-journal).
