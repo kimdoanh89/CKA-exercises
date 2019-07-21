@@ -154,8 +154,24 @@ Use the manifest file used by kubeadm tool. Use a different port than the one us
 ```bash
 sudo cp /etc/kubernetes/manifests/kube-scheduler.yaml my-custom-scheduler.yaml
 ```
-Edit the my-custom-scheduler.yaml file. Adding --scheduler-name=my-scheduler in the command options:
+Edit the my-custom-scheduler.yaml file, change leader-elect to false, then add --scheduler-name=my-scheduler in the command options:
 ```yaml
+metadata:
+  labels:
+    component: kube-scheduler
+    tier: control-plane
+  name: my-scheduler
+  namespace: kube-system
+spec:
+  containers:
+  - command:
+    - kube-scheduler
+    - --bind-address=127.0.0.1
+    - --kubeconfig=/etc/kubernetes/scheduler.conf
+    - --leader-elect=false
+    - --scheduler-name=my-scheduler
+    image: k8s.gcr.io/kube-scheduler:v1.14.4
+    name: my-scheduler
 
 ```
 
