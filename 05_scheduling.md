@@ -114,15 +114,36 @@ vi hog.yaml
         - "1s"
 ```
 ```bash
-kubectl replace -f hog.yaml
+kubectl delete deployment hog
+kubectl create -f hog.yaml
+```
+**When a pod tries to exceed the resource limits**
+- In case of CPU, K8s throttles the CPU so that it does not go beyond the specified limit.
+- In case of memory, a container can use more memory resources than its limit. If the pod tries to consume more memory than its limit constantly, the Pod will be terminated .
+
+Using kubectl top pod, you can see that the hog pod consumes around 987m of CPU (~ 1vCPU = 1000m) even when the container tries to use 2 units of CPU with the command -cpus 2, and 929Mi of memory. 
+```bash
+kubectl top pod
 ```
 
 </p>
 </details>
 
+### Edit the hog configuration file with limits of 1 cpu, 500Mi memory with the same args above (pod tries to consumes more memory than limit)
+
+<details><summary>show</summary>
+<p>
+
+The pod will be terminated. It tries to restarts and will be terminated again and again.
+
+</p>
+</details>
+
+
 
 ## 4. Understand how to run multiple schedulers and how to configure Pods to use them
 ## 5. Manually schedule a pod without a scheduler
+### Manually schedule a pod with the nginx image to the master node without a scheduler
 <details><summary>show</summary>
 <p>
 
@@ -175,13 +196,26 @@ kubectl edit deployment my-deployment
 </p>
 </details>
 
-### StaticPod
-systemctl show kubelet.service
-find the --config option
-Environment=KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf\x20--kubeconfig=/etc/kubernetes/kubelet.conf KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml
+### Find and kill the static pod in a node
 
+<details><summary>show</summary>
+<p>
+  
+Show the kubelet service.
+```bash  
+systemctl show kubelet.service
+```
+find the --config option
+```bash
+Environment=KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf\x20--kubeconfig=/etc/kubernetes/kubelet.conf KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml
+```
 Look in to the file /var/lib/kubelet/config.yaml, looking for staticPodPath
+```bash
 staticPodPath: /etc/just-to-mess-with-you
+```
+
+</p>
+</details>
 
 ## 6. Display scheduler events
  
