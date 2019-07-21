@@ -139,4 +139,14 @@ kubectl edit deployment my-deployment
 </p>
 </details>
 
+### StaticPod
+systemctl show kubelet.service
+find the --config option
+Environment=KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf\x20--kubeconfig=/etc/kubernetes/kubelet.conf KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml
+
+Look in to the file /var/lib/kubelet/config.yaml, looking for staticPodPath
+staticPodPath: /etc/just-to-mess-with-you
+
 ## 6. Display scheduler events
+ 
+
