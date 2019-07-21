@@ -145,6 +145,46 @@ The pod will be terminated. It tries to restarts and will be terminated again an
 
 
 ## 4. Understand how to run multiple schedulers and how to configure Pods to use them
+
+### Deploy an additional scheduler to the cluster following the given specification (Namespace: kube-system, Name: my-scheduler)
+<details><summary>show</summary>
+<p>
+
+Use the manifest file used by kubeadm tool. Use a different port than the one used by the current one. Copy the kube-scheduler.yaml file from /etc/kubernetes/manifests/ folder.
+```bash
+sudo cp /etc/kubernetes/manifests/kube-scheduler.yaml my-custom-scheduler.yaml
+```
+Edit the my-custom-scheduler.yaml file. Adding --scheduler-name=my-scheduler in the command options:
+```yaml
+
+```
+
+</p>
+</details>
+
+### Create a POD with nginx image with the new custom scheduler.
+<details><summary>show</summary>
+<p>
+
+Use kubectl run with dry-run option to generate the nginx.yaml file, then edit the file:
+```bash
+kubectl run nginx --generator=run-pod/v1 --dry-run -o yaml > nginx.yaml
+vi nginx.yaml
+```
+Adding the schedulerName: option in the spec:
+```yaml
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+  schedulerName: my-scheduler
+```
+  
+</p>
+</details>
+
+
+
 ## 5. Manually schedule a pod without a scheduler
 ### Manually schedule a pod with the nginx image to the master node without a scheduler
 <details><summary>show</summary>
