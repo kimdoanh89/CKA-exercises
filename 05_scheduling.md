@@ -224,5 +224,15 @@ staticPodPath: /etc/just-to-mess-with-you
 </details>
 
 ## 6. Display scheduler events
+<details><summary>show</summary>
+<p>
+  
+```bash
+kubectl get events
+kubectl -n kube-system logs my-custom-scheduler
+```
+  
+</p>
+</details>
  
 
