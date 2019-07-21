@@ -46,6 +46,9 @@ kubectl get pod --selector=env=prod,bu=finance,tier=frontend
 
 
 ## 2. Understand the role of DaemonSets
+
+[Here](https://github.com/kimdoanh89/CKA-exercises/blob/master/01_app_lifecycle_management.md#create-the-daemonset-with-nginx-image-update-the-ds-with-newer-version-of-the-nginx-server-change-the-updatestrategy-to-ondelete).
+
 ## 3. Understand how resource limits can affect Pod scheduling
 
 ### Create the deployment hog with the image vish/stree
