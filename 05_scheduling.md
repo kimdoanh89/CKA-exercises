@@ -72,10 +72,46 @@ vi hog.yaml
         imagePullPolicy: Always
         name: stress
         resources:
-          requests:
-            memory: 2500Mi
           limits:
-            memory: 4Gi
+            memory: "4Gi"
+          requests:
+            memory: "2500Mi"
+
+```
+```bash
+kubectl replace -f hog.yaml
+```
+
+</p>
+</details>
+
+### Edit the hog configuration file (limits of 1 cpu, 4Gi memory with requests of 0.5 cpu, 500Mi memory), and add arguments for stress to consume CPU and memory (-cpus 2 -mem-total 900Mi -mem-alloc-size 100Mi -mem-alloc-sleep 1s). 
+<details><summary>show</summary>
+<p>
+  
+```bash
+kubectl get deployment hog -o yaml --export > hog.yaml
+vi hog.yaml 
+```
+```yaml        
+        imagePullPolicy: Always
+        name: stress
+        resources:
+          limits:
+            cpu: "1"
+            memory: "4Gi"
+          requests:
+            cpu: "0.5"
+            memory: "2500Mi"
+        args:
+        - -cpus
+        - "2"
+        - -mem-total
+        - "900Mi"
+        - -mem-alloc-size
+        - "100Mi"
+        - -mem-alloc-sleep
+        - "1s"
 ```
 ```bash
 kubectl replace -f hog.yaml
