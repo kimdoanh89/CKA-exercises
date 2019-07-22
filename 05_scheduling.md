@@ -1,5 +1,79 @@
 ## 1. Use label selectors to schedule Pods
 
+### Assign Pods using nodeSelector 
+- Labels the master as VIP hardware with status=vip, labels the worker1 as other hardwares with status=other and verify the settings
+- Verify there are no deployments running, outside of the kube-system namespace. If there are, delete them. Then get a count of how many containers are running on both the master and secondary nodes.
+- Create a pod name **vip** using vip.yaml to spawn four busybox containers which sleep the whole time. Include the nodeSelector entry to select the vip hardware.
+- Deploy the new pod. Verify the containers have been created on the master node.
+<details><summary>show</summary>
+<p>
+  
+```bash
+kubectl label node master status=vip
+kubectl label node worker1 status=other
+kubectl get nodes --show-labels
+```
+```bash
+kubectl get deployments --all-namespaces
+# On the master node
+sudo docker ps | wc -l
+# On the worker1 node
+sudo docker ps | wc -l
+```
+```bash
+kubectl run vip --generator=run-pod/v1 --image=busybox --dry-run -o yaml > vip.yaml
+vi vip.yaml 
+```
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: vip
+  name: vip
+spec:
+  containers:
+  - image: busybox
+    name: vip1
+    command:
+    - sleep
+    - "1000000"
+  - image: busybox
+    name: vip2
+    command:
+    - sleep
+    - "1000000"
+  - image: busybox
+    name: vip3
+    command:
+    - sleep
+    - "1000000"
+  - image: busybox
+    name: vip4
+    command:
+    - sleep
+    - "1000000"
+  nodeSelector:
+    status: vip
+```
+```bash
+kubectl create -f vip.yaml
+# On the master node
+sudo docker ps | wc -l
+# On the worker1 node
+sudo docker ps | wc -l
+```
+
+</p>
+</details>
+
+### Using Taints to control pod deployment
+There are three taints, NoSchedule, PreferNoSchedule and NoExecute. The taints having to do with schedules will be used to determine newly deployed containers, but will not affect running containers. The use of NoExecute will cause running containers to move.
+- Get a count of how many containers are running on both the master and secondary nodes.
+- Create a deployment with name: taint-deployment which will deploy eight nginx containers using a YAML file.
+- Determine where the containers are running.
+- Delete the deployment and taint the 
+  
 ### We have deployed a number of PODs. They are labelled with 'tier', 'env' and 'bu'. 
 - How many PODs exist in the 'dev' environment? 
 - How many PODs are in the 'finance' business unit ('bu')? 
@@ -45,7 +119,8 @@ kubectl create deployment hog --image vish/stress
 </details>
 
 
-### Save the deployment to yaml file and add the memory limits of 4Gi and memory requests of 2500Mi
+### Save the deployment to yaml file 
+- Add the memory limits of 4Gi and memory requests of 2500Mi
 <details><summary>show</summary>
 <p>
   
@@ -70,7 +145,9 @@ kubectl replace -f hog.yaml
 </p>
 </details>
 
-### Edit the hog configuration file (limits of 1 cpu, 4Gi memory with requests of 0.5 cpu, 500Mi memory), and add arguments for stress to consume CPU and memory (-cpus 2 -mem-total 900Mi -mem-alloc-size 100Mi -mem-alloc-sleep 1s). 
+### Edit the hog configuration file 
+- Limits of 1 cpu, 4Gi memory with requests of 0.5 cpu, 500Mi memory 
+- Add arguments for stress to consume CPU and memory (-cpus 2 -mem-total 900Mi -mem-alloc-size 100Mi -mem-alloc-sleep 1s). 
 <details><summary>show</summary>
 <p>
   
@@ -114,7 +191,8 @@ kubectl top pod
 </p>
 </details>
 
-### Edit the hog configuration file with limits of 1 cpu, 500Mi memory with the same args above (pod tries to consumes more memory than limit)
+### Edit the hog configuration file 
+- Limits of 1 cpu, 500Mi memory with the same args above (pod tries to consumes more memory than limit)
 
 <details><summary>show</summary>
 <p>
@@ -128,7 +206,9 @@ The pod will be terminated. It tries to restarts and will be terminated again an
 
 ## 4. Understand how to run multiple schedulers and how to configure Pods to use them
 
-### Deploy an additional scheduler to the cluster following the given specification (Namespace: kube-system, Name: my-scheduler)
+### Deploy an additional scheduler to the cluster following the given specification 
+ - Namespace: kube-system
+ - Name: my-scheduler
 <details><summary>show</summary>
 <p>
 
