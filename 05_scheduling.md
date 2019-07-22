@@ -1,42 +1,24 @@
 ## 1. Use label selectors to schedule Pods
 
-### We have deployed a number of PODs. They are labelled with 'tier', 'env' and 'bu'. How many PODs exist in the 'dev' environment?
+### We have deployed a number of PODs. They are labelled with 'tier', 'env' and 'bu'. 
+- How many PODs exist in the 'dev' environment? 
+- How many PODs are in the 'finance' business unit ('bu')? 
+- How many PODs and other objects including ReplicaSets, etc. are in the 'prod' environment? 
+- Identify the POD which is 'prod', part of 'finance' BU and is a 'frontend' tier?
 <details><summary>show</summary>
 <p>
 
 ```bash
 kubectl get pod --selector=env=dev
-```
-
-</p>
-</details>
-
-### How many PODs are in the 'finance' business unit ('bu')?
-<details><summary>show</summary>
-<p>
-  
+``` 
 ```bash
 kubectl get pod --selector=bu=finance
 ```
 
-</p>
-</details>
-
-### How many PODs and other objects including ReplicaSets, etc. are in the 'prod' environment?
-<details><summary>show</summary>
-<p>
-  
 ```bash
 kubectl get all --selector=env=prod
 ```
 
-</p>
-</details>
-
-### Identify the POD which is 'prod', part of 'finance' BU and is a 'frontend' tier?
-<details><summary>show</summary>
-<p>
-  
 ```bash
 kubectl get pod --selector=env=prod,bu=finance,tier=frontend
 ```
