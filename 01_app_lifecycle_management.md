@@ -1,5 +1,5 @@
 ## 1. Understand deployments and how to perform rolling update and rollbacks
-### Create the DaemonSet with nginx image, update the ds with newer version of the nginx server, change the updateStrategy to OnDelete
+### Create the DaemonSet with nginx:1.10.1 image, update the ds with newer version of the nginx:1.12.1-alpine server, change the updateStrategy to OnDelete
 <details><summary>show</summary>
 <p>
 
@@ -83,6 +83,86 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
 
 
 ## 2. Know various ways to configure applications
+
+### Configuring Command and Arguments on applications
+- Create a pod (Pod name: ubuntu-sleeper) with the ubuntu image to run a container to sleep for 5000 seconds.
+- Create a pod with the given specifications. By default it displays a 'blue' background. Set the given command line arguments to change it to 'green' (Pod Name: webapp-green, Image: kodekloud/webapp-color, Command line arguments: --color=green)
+<details><summary>show</summary>
+<p>
+  
+- Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
+```bash
+kubectl run ubuntu-sleeper --generator=run-pod/v1 --image=ubuntu --dry-run -o yaml > ubuntu-sleeper.yaml
+vi ubuntu-sleeper.yaml
+```
+```yaml
+spec:
+  containers:
+  - image: ubuntu
+    name: ubuntu-sleeper
+    command:
+    - sleep
+    - "5000"
+```
+
+- Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
+```bash
+kubectl run webapp-green --generator=run-pod/v1 --image=kodekloud/webapp-color --dry-run -o yaml > webapp.yaml
+vi webapp.yaml
+kubectl create -f webapp.yaml
+```
+```yaml
+spec:
+  containers:
+  - image: kodekloud/webapp-color
+    name: webapp-green
+    args:
+    - --color
+    - "green"
+```
+
+
+</p>
+</details>
+
+
+### Configuring Environment Variables
+- Create a pod with the given specifications. Pod name: print-greeting, image: ubuntu, 3 env variables GREETING, HONORIFIC, and NAME are set to Warm greetings to, The Most Honorable, and Kubernetes, respectively, run in the bash shell the command: echo $(GREETING) $(HONORIFIC) $(NAME), then sleep 5000.
+<details><summary>show</summary>
+<p>
+
+- Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
+```bash
+kubectl run print-greeting --generator=run-pod/v1 --image=bash --dry-run -o yaml > envars.yaml
+vi envars.yaml
+kubectl create -f envars.yaml
+```
+```yaml
+spec:
+  containers:
+  - image: ubuntu
+    name: print-greeting
+    resources: {}
+    env:
+    - name: GREETING
+      value: Warm greetings to
+    - name: HONORIFIC
+      value: The Most Honorable
+    - name: NAME
+      value: Kubernetes
+    command: ["/bin/bash"] 
+    args: ["-c", "echo $(GREETING) $(HONORIFIC) $(NAME); sleep 5000"]
+```
+Check the output
+```bash
+kubectl logs print-greeting
+```
+
+</p>
+</details>
+
+### Configuring Secrets
+
 ## 3. Know how to scale applications
 ### Create the Deployment with nginx image, scale to replicas=3
 <details><summary>show</summary>
