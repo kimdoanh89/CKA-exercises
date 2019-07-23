@@ -91,35 +91,35 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
 <p>
   
 - Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
-```bash
-kubectl run ubuntu-sleeper --generator=run-pod/v1 --image=ubuntu --dry-run -o yaml > ubuntu-sleeper.yaml
-vi ubuntu-sleeper.yaml
-```
-```yaml
-spec:
-  containers:
-  - image: ubuntu
-    name: ubuntu-sleeper
-    command:
-    - sleep
-    - "5000"
-```
+  ```bash
+  kubectl run ubuntu-sleeper --generator=run-pod/v1 --image=ubuntu --dry-run -o yaml > ubuntu-sleeper.yaml
+  vi ubuntu-sleeper.yaml
+  ```
+  ```yaml
+  spec:
+    containers:
+    - image: ubuntu
+      name: ubuntu-sleeper
+      command:
+      - sleep
+      - "5000"
+  ```
 
 - Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
-```bash
-kubectl run webapp-green --generator=run-pod/v1 --image=kodekloud/webapp-color --dry-run -o yaml > webapp.yaml
-vi webapp.yaml
-kubectl create -f webapp.yaml
-```
-```yaml
-spec:
-  containers:
-  - image: kodekloud/webapp-color
-    name: webapp-green
-    args:
-    - --color
-    - "green"
-```
+  ```bash
+  kubectl run webapp-green --generator=run-pod/v1 --image=kodekloud/webapp-color --dry-run -o yaml > webapp.yaml
+  vi webapp.yaml
+  kubectl create -f webapp.yaml
+  ```
+  ```yaml
+  spec:
+    containers:
+    - image: kodekloud/webapp-color
+      name: webapp-green
+      args:
+      - --color
+      - "green"
+  ```
 
 
 </p>
@@ -127,36 +127,42 @@ spec:
 
 
 ### Configuring Environment Variables
-- Create a pod with the given specifications. Pod name: print-greeting, image: ubuntu, 3 env variables GREETING, HONORIFIC, and NAME are set to Warm greetings to, The Most Honorable, and Kubernetes, respectively, run in the bash shell the command: echo $(GREETING) $(HONORIFIC) $(NAME), then sleep 5000.
+- Create a pod with the given specifications. 
+    - Pod name: print-greeting, image: ubuntu, 
+    - 3 env variables GREETING, HONORIFIC, and NAME are set to Warm greetings to, The Most Honorable, and Kubernetes, respectively,
+    - run in the bash shell the command: echo $(GREETING) $(HONORIFIC) $(NAME), then sleep 5000.
+- Setting env variables using ConfigMap: 
+    - create a configmap name colors with favorite=blue
+    - create a pod name shell-demo, image: nginx, 
 <details><summary>show</summary>
 <p>
 
 - Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
-```bash
-kubectl run print-greeting --generator=run-pod/v1 --image=bash --dry-run -o yaml > envars.yaml
-vi envars.yaml
-kubectl create -f envars.yaml
-```
-```yaml
-spec:
-  containers:
-  - image: ubuntu
-    name: print-greeting
-    resources: {}
-    env:
-    - name: GREETING
-      value: Warm greetings to
-    - name: HONORIFIC
-      value: The Most Honorable
-    - name: NAME
-      value: Kubernetes
-    command: ["/bin/bash"] 
-    args: ["-c", "echo $(GREETING) $(HONORIFIC) $(NAME); sleep 5000"]
-```
-Check the output
-```bash
-kubectl logs print-greeting
-```
+  ```bash
+  kubectl run print-greeting --generator=run-pod/v1 --image=bash --dry-run -o yaml > envars.yaml
+  vi envars.yaml
+  kubectl create -f envars.yaml
+  ```
+  ```yaml
+  spec:
+    containers:
+    - image: ubuntu
+      name: print-greeting
+      resources: {}
+      env:
+      - name: GREETING
+        value: Warm greetings to
+      - name: HONORIFIC
+        value: The Most Honorable
+      - name: NAME
+        value: Kubernetes
+      command: ["/bin/bash"] 
+      args: ["-c", "echo $(GREETING) $(HONORIFIC) $(NAME); sleep 5000"]
+  ```
+  Check the output
+  ```bash
+  kubectl logs print-greeting
+  ```
 
 </p>
 </details>
