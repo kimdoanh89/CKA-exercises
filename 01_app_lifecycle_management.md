@@ -132,8 +132,9 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
     - 3 env variables GREETING, HONORIFIC, and NAME are set to Warm greetings to, The Most Honorable, and Kubernetes, respectively,
     - run in the bash shell the command: echo $(GREETING) $(HONORIFIC) $(NAME), then sleep 5000.
 - Setting env variables using ConfigMap: 
-    - create a configmap name colors with favorite=blue
-    - create a pod name shell-demo, image: nginx, 
+    - create a configmap name family with father=lkd, mother=tn, son=bob
+    - create a pod name shell-demo, image: nginx, env name (iam) from the key father of configmap family.
+    - use envFrom to define all of the ConfigMap’s data as Pod environment variables
 <details><summary>show</summary>
 <p>
 
@@ -163,6 +164,49 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
   ```bash
   kubectl logs print-greeting
   ```
+  
+- Setting env variables using ConfigMap: 
+  ```bash
+  kubectl create configmap family --from-literal=father=lkd --from-literal=mother=tn --from-literal=son=bob
+  kubectl run shell-demo --generator=run-pod/v1 --image=nginx --dry-run -o yaml > config-app.yaml
+  vi config-app.yaml
+  ```
+  ```yaml
+  spec:
+  containers:
+  - image: nginx
+    name: shell-demo
+    env:
+    - name: iam
+      valueFrom:
+        configMapKeyRef:
+          name: family
+          key: father
+  ```
+  Create the pod, and check output:
+  ```bash
+  kubectl create -f config-app.yaml
+  kubectl exec shell-demo -it -- /bin/bash -c 'echo $iam'
+  ```
+  Modify the env:
+  ```yaml
+  spec:
+  containers:
+  - image: nginx
+    name: shell-demo
+    envFrom:
+    - configMapRef:
+       name: family
+  ```
+  Delete and recreate the pod, check the output:
+  ```bash
+  kubectl delete pod shell-demo
+  kubectl create -f config-app.yaml
+  kubectl exec shell-demo -it -- /bin/bash -c 'env'
+  ```
+  
+  
+  
 
 </p>
 </details>
