@@ -70,9 +70,56 @@ sudo docker ps | wc -l
 ### Using Taints to control pod deployment
 There are three taints, NoSchedule, PreferNoSchedule and NoExecute. The taints having to do with schedules will be used to determine newly deployed containers, but will not affect running containers. The use of NoExecute will cause running containers to move.
 - Get a count of how many containers are running on both the master and secondary nodes.
-- Create a deployment with name: taint-deployment which will deploy eight nginx containers using a YAML file.
-- Determine where the containers are running.
-- Delete the deployment and taint the 
+- Create a deployment with name: taint-deployment which will deploy eight nginx containers using a YAML file (taint.yaml), determine where the containers are running.
+- Delete the deployment and taint the secondary node ( key 'lkd' and value 'value' and effect 'PreferNoSchedule'.), verify it has the taint then create the deployment again, locate where the containers are running.
+- Delete the deployment, remove the taint, verify it has been removed, use the NoSchedule taint, then create the deployment again, locate where the containers are running.
+-  Delete the deployment, remove the taint, verify it has been removed, use the NoExecute taint, then create the deployment again, locate where the containers are running.
+- Delete the deployment.
+<details><summary>show</summary>
+<p>
+  
+```bash
+# On both master and worker nodes.
+sudo docker ps | wc -l
+```
+Using kubectl with dry-run option to generate taint.yaml file, edit the yaml file and change the replicas to 8.
+```bash
+kubectl create deployment taint-deployment --image=nginx --dry-run -o yaml > taint.yaml
+vi taint.yaml
+kubectl create -f taint.yaml
+# On both master and worker nodes.
+sudo docker ps | wc -l
+```
+```bash
+kubectl delete deployment taint-deployment
+kubectl taint node worker1 lkd=value:PreferNoSchedule
+kubectl describe node | grep Taint
+kubectl create -f taint.yaml
+# On both master and worker nodes.
+sudo docker ps | wc -l
+```
+```bash
+kubectl delete deployment taint-deployment
+kubectl taint node worker1 lkd=value:NoSchedule
+kubectl describe node | grep Taint
+kubectl create -f taint.yaml
+# On both master and worker nodes.
+sudo docker ps | wc -l
+```
+```bash
+kubectl delete deployment taint-deployment
+kubectl taint node worker1 lkd=value:NoExecute
+kubectl describe node | grep Taint
+kubectl create -f taint.yaml
+# On both master and worker nodes.
+sudo docker ps | wc -l
+```
+```bash
+kubectl delete deployment taint-deployment
+```
+
+</p>
+</details>
   
 ### We have deployed a number of PODs. They are labelled with 'tier', 'env' and 'bu'. 
 - How many PODs exist in the 'dev' environment? 
