@@ -1,6 +1,19 @@
 ## 1. Design a Kubernetes Cluster
 ## 2. Install Kubernetes Masters and Nodes
-### 2.1. Install Master
+
+
+## 3. Configure secure cluster communications
+## 4. Configure a highly-available Kubernetes cluster
+## 5. Know where to get the Kubernetes release binaries
+## 6. Provision underlying infrastructure to deploy a Kubernetes cluster
+## 7. Choose a network solution
+## 8. Choose your Kubernetes infrastructure configuration
+## 9. Run end-to-end tests on your cluster
+## 10. Analyze end-to-end test results
+## 11. Run Node end-to-end Tests
+## 12. Install and use kubeadm to install, configure, and manage Kubernetes clusters
+
+### 12.1. Install Master
 <details><summary>show</summary>
 <p>
   
@@ -117,7 +130,7 @@ systemctl daemon-reload && systemctl restart kubelet
 </p>
 </details>
 
-### 2.2. Install worker
+### 12.2. Install worker
 <details><summary>show</summary>
 <p>
   
@@ -140,14 +153,3 @@ kubeadm join 10.0.2.15:6443 --token m3jpro.pvufj1envk6mx3g5 \
 
 </p>
 </details>
-
-## 3. Configure secure cluster communications
-## 4. Configure a highly-available Kubernetes cluster
-## 5. Know where to get the Kubernetes release binaries
-## 6. Provision underlying infrastructure to deploy a Kubernetes cluster
-## 7. Choose a network solution
-## 8. Choose your Kubernetes infrastructure configuration
-## 9. Run end-to-end tests on your cluster
-## 10. Analyze end-to-end test results
-## 11. Run Node end-to-end Tests
-## 12. Install and use kubeadm to install, configure, and manage Kubernetes clusters
