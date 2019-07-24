@@ -212,6 +212,61 @@ kubectl describe pod ds-one-<tab> | grep Image:    # <-- new pod should be 1.12.
 </details>
 
 ### Configuring Secrets
+A tutorial of how to use and config Secrets is [here](https://kubernetes.io/docs/concepts/configuration/secret/).
+- Create a secret name db-user-password with username=admin, password=kd248asid9sasp, then decode the secret db-user-password
+- Using Secrets as Files from a Pod
+  - Create a pod name nginx, image=nginx
+  - Make the Secret db-user-password available to the Pod as a mounted volume at /etc/db_confidentials 
+  - Verify the volume exits
+<details><summary>show</summary>
+<p>
+- Create the secret and decode.
+  ```bash
+  kubectl create secret generic db-user-password --from-literal=user=admin --from-literal=password=kd248asid9sasp
+  kubectl get secret db-user-password -o yaml
+  ```
+  ```yaml
+  apiVersion: v1
+  data:
+    password: a2QyNDhhc2lkOXNhc3A=
+    user: YWRtaW4=
+  kind: Secret
+  metadata:
+    name: db-user-password
+  type: Opaque
+  ```
+  Decode the password field:
+  ```bash
+  echo 'a2QyNDhhc2lkOXNhc3A=' | base64 --decode
+  ```
+- Using Secrets as Files from a Pod
+  - Using kubectl run with --dry-run option to create yaml file, then add command to the yaml file.
+  ```bash
+  kubectl run nginx --generator=run-pod/v1 --image=nginx --dry-run -o yaml > secret.yaml
+  vi secret.yaml
+  ```
+  ```yaml
+  spec:
+  containers:
+  - image: nginx
+    name: nginx
+    resources: {}
+    volumeMounts:
+    - name: pass-vol
+      mountPath: /etc/db_confidentials
+  volumes:
+  - name: pass-vol
+    secret:
+      secretName: db-user-password
+  ```
+  Verify the volume exits
+  ```bash
+  kubectl exec -it nginx -- /bin/bash -c 'df -ha | grep db_confi'
+  kubectl exec -it nginx -- /bin/bash -c 'ls /etc/db_confidentials'
+  ```
+
+</p>
+</details>
 
 ## 3. Know how to scale applications
 ### Create the Deployment with nginx image, scale to replicas=3
