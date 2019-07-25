@@ -364,3 +364,6 @@ $ kubectl edit deploy -n kube-system metrics-server
 </details>
 
 ## 4. Understand the primitives necessary to create a self-healing application
+- Kubernetes supports self-healing applications through ReplicaSets and Replication Controllers. The replication controller helps in ensuring that a POD is re-created automatically when the application within the POD crashes. It helps in ensuring enough replicas of the application are running at all times.
+
+- Kubernetes provides additional support to check the health of applications running within PODs and take necessary actions through Liveness and Readiness Probes.
