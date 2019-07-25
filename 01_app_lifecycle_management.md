@@ -270,8 +270,54 @@ A tutorial of how to use and config Secrets is [here](https://kubernetes.io/docs
 
 ### Multi-container Pod
 - Create a multi-container pod with 2 containers (Name: yellow, Container 1 Name: lemon, Container 1 Image: busybox, Container 2 Name: gold ,Container 2 Image: redis).
+<details><summary>show</summary>
+<p>
+```bash
+kubectl run yellow --generator=run-pod/v1 --image=busybox --dry-run -o yaml > yellow.yaml
+vi yellow.yaml
+```
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: yellow
+  name: yellow
+spec:
+  containers:
+  - image: busybox
+    name: lemon
+  - image: redis
+    name: gold
+```
+
+</p>
+</details>
 
 ### InitContainers
+- Create the pod name red using nginx image,
+- Update the pod red to use an initContainer that uses the busybox image and sleeps for 20 seconds
+<details><summary>show</summary>
+<p>
+
+```bash
+kubectl run red --generator=run-pod/v1 --image=nginx --dry-run -o yaml > init-red.yaml
+vi init-red.yaml
+```
+```yaml
+spec:
+  containers:
+  - image: nginx
+    name: red
+    resources: {}
+  initContainers:
+  - image: init-container-red
+    name: busybox
+    command: ["sleep 20"]
+```
+
+</p>
+</details>
 
 ## 3. Know how to scale applications
 ### Create the Deployment with nginx image, scale to replicas=3
