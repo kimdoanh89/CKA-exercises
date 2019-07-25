@@ -93,3 +93,5 @@ kubeadm token create --print-join-command
 </details>
 
 ## 3. Implement backup and restore methodologies
+
+[Here](https://github.com/mmumshad/kubernetes-the-hard-way/blob/master/practice-questions-answers/cluster-maintenance/backup-etcd/etcd-backup-and-restore.md).
