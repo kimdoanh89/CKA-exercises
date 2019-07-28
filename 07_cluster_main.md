@@ -1,6 +1,17 @@
 ## 1. Understand Kubernetes cluster upgrade process
 
 ### Upgrade from v1.14.1 to 1.14.4
+<details><summary>in short</summary>
+<p>
+  
+```bash
+kubeadm upgrade plan
+apt instal kubeadm=1.14.4-00
+```
+
+</p>
+</details>
+
 <details><summary>show</summary>
 <p>
 
@@ -96,6 +107,28 @@ kubeadm token create --print-join-command
 
 [Here](https://github.com/mmumshad/kubernetes-the-hard-way/blob/master/practice-questions-answers/cluster-maintenance/backup-etcd/etcd-backup-and-restore.md), [here](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster), [here](https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md), and [here](https://www.youtube.com/watch?v=qRPNuT080Hk).
 
+- create a pod name family with image nginx
+- create a deployment name nginx with image nginx, scale the deployment to replicas=3
+- take a snapshot name snapshot.db with etcdctl
+- delete all the pod and deployment (simulate the disaster happens that delete all pods and deployments in the cluster)
+- restore to the previous state of the cluster with the snapshot.db
+
+<details><summary>show</summary>
+<p>
+
+```bash
+kubectl run family --generator=run-pod/v1 --image=nginx
+kubectl create deployment nginx --image=nginx 
+kubectl scale deployment nginx --replicas=3
+sudo ETCDCTL_API=3 etcdctl snapshot save snapshot.db --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key
+kubectl delete pod family
+kubectl delete deployment nginx
+sudo ETCDCTL_API=3 etcdctl snapshot restore snapshot.db --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --data-dir=/var/lib/etcd-from-backup --name=master --initial-advertise-peer-urls="http://localhost:2380" --initial-cluster="master=http://localhost:2380" --initial-cluster-token="etcd-cluster-1"
+```
+Modify /etc/kubernetes/manifests/etcd.yaml:  --initial-cluster-token=etcd-cluster-1; --data-dir=/var/lib/etcd-from-backup, update the volumeMounts & hostPath to new path /var/lib/etcd-from-backup
+  
+<p>
+</details>
 
 
 
