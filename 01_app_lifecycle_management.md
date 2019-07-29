@@ -220,6 +220,7 @@ A tutorial of how to use and config Secrets is [here](https://kubernetes.io/docs
   - Verify the volume exits
 <details><summary>show</summary>
 <p>
+  
 - Create the secret and decode.
   ```bash
   kubectl create secret generic db-user-password --from-literal=user=admin --from-literal=password=kd248asid9sasp
