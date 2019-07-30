@@ -74,6 +74,7 @@ Kubernetes cluster and set a 45 day expiration.
 
 
 ## 5. Work with images securely
+Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 ### Image security
 - Create a deployment name web with image nginx:alpine, scale to replicas=2
 - We decided to use a modified version of the application from an internal private registry. Update the image of the deployment to use a new image from myprivateregistry.com:5000
