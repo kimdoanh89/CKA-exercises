@@ -129,11 +129,13 @@ Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/pul
 ## 6. Define security contexts
 Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).
 
-**Note**: The User ID defined in the securityContext of the container overrides the User ID in the POD.
+**Note**: 
+- You may choose to configure the security settings at a container level or at a pod level.
+- The User ID defined in the securityContext of the container overrides the User ID in the POD.
 ### Security Context
 - Create a pod 'ubuntu-sleeper' with image 'ubuntu', command 'sleep 4800'
 - Check who run the container?
 - Edit the pod 'ubuntu-sleeper' to run the sleep process with user ID 1010.
-- 
+- Update pod 'ubuntu-sleeper' to run as Root user and with the 'SYS_TIME' capability.
 
 ## 7. Secure persistent key value store
