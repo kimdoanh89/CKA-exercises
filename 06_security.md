@@ -7,13 +7,18 @@
 Kubernetes cluster and set a 45 day expiration.
 - Update the access config file to add user DevDan and reference the new key and certificate (using set-credentials)
 - Create context name DevDan-context with cluster kubernetes, namespace development, and user DevDan
-- Create a role name Developer in Development namespace:
+- Create a role name Developer in development namespace:
   - apiGroups: "", "extensions", "apps"
   - resources: "deployments" , "replicasets" , "pods"
   - verbs: ["*"]
-- Create a rolebinding name developer-role-binding in Development namespace: role developer and user DevDan
+- Create a rolebinding name developer-role-binding in development namespace: role developer and user DevDan
 - In DevDan-context, Create a new deployment nginx with image nginx, verify it exists, then delete it 
 - Create context name ProdDan-context with cluster kubernetes, namespace production, and user DevDan
+- Create a role name dev-prod in production namespace:
+  - apiGroups: "", "extensions", "apps"
+  - resources: "deployments" , "replicasets" , "pods"
+  - verbs: "get", "list", "watch"
+- Create a rolebinding name production-role-binding in production namespace: role dev-prod and user DevDan
 
 ## 2. Understand Kubernetes security primitives
 ## 3. Know how to configure network policies
