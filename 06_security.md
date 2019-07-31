@@ -148,12 +148,39 @@ Kubernetes cluster and set a 45 day expiration.
 
 </p></details>
 
-### Roles, Role bindings, cluster roles and cluster role bindings
+### Cluster roles and cluster role bindings
+- A new user DevDan joined the team. He will be focusing on the nodes in the cluster:
+  - Create the required ClusterRoles and ClusterRoleBindings 
+  - So he gets access to the nodes (Grant permission to list nodes)
+- Create the required ClusterRoles and ClusterRoleBindings to allow DevDan access to Storage.
+  - ClusterRole: storage-admin, Resource: persistentvolumes, Resource: storageclasses
+  - ClusterRoleBinding: DevDan-storage-admin, ClusterRoleBinding Subject: DevDan, ClusterRoleBinding Role: storage-admin
+<details><summary>show</summary><p>
+- Create clusterrole and clusterrolebinding to list nodes:
+  ```bash
+  kubectl create clusterrole DevDan-cluster-role --verb=list --resource=nodes --dry-run -o yaml > DevDan-cluster-role.yaml
+  kubectl create -f DevDan-cluster-role.yaml
+  kubectl create clusterrolebinding DevDan-role-binding --user=DevDan --clusterrole=DevDan-cluster-role
+  ```
+- Create the required ClusterRoles and ClusterRoleBindings to allow DevDan access to Storage.
+  ```bash
+  
+  ```
+  
 
+
+</p></details>
 
 
 ## 3. Know how to configure network policies
 ### Network Policy
+
+<details><summary>show</summary><p>
+  
+
+
+</p></details>
+
 
 ## 4. Create and manage TLS certificates for cluster components
 
@@ -239,4 +266,18 @@ Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/sec
 - Edit the pod 'ubuntu-sleeper' to run the sleep process with user ID 1010.
 - Update pod 'ubuntu-sleeper' to run as Root user and with the 'SYS_TIME' capability.
 
+<details><summary>show</summary><p>
+  
+
+
+</p></details>
+
+
 ## 7. Secure persistent key value store
+
+
+<details><summary>show</summary><p>
+  
+
+
+</p></details>
