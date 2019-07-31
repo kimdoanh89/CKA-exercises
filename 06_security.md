@@ -155,20 +155,26 @@ Kubernetes cluster and set a 45 day expiration.
 - Create the required ClusterRoles and ClusterRoleBindings to allow DevDan access to Storage.
   - ClusterRole: storage-admin, Resource: persistentvolumes, Resource: storageclasses
   - ClusterRoleBinding: DevDan-storage-admin, ClusterRoleBinding Subject: DevDan, ClusterRoleBinding Role: storage-admin
+  
 <details><summary>show</summary><p>
+  
 - Create clusterrole and clusterrolebinding to list nodes:
   ```bash
   kubectl create clusterrole DevDan-cluster-role --verb=list --resource=nodes --dry-run -o yaml > DevDan-cluster-role.yaml
   kubectl create -f DevDan-cluster-role.yaml
   kubectl create clusterrolebinding DevDan-role-binding --user=DevDan --clusterrole=DevDan-cluster-role
+  # Check the authorization
+  kubectl auth can-i --list --as DevDan
+  kubectl auth can-i list nodes --as DevDan
   ```
 - Create the required ClusterRoles and ClusterRoleBindings to allow DevDan access to Storage.
   ```bash
-  
+  kubectl create clusterrole storage-admin --resource=persistentvolumes --resource=storageclasses --verb="*"
+  kubectl create clusterrolebinding DevDan-storage-admin --user=DevDan --clusterrole=storage-admin
+  # Check the authorization
+  kubectl auth can-i --list --as DevDan
   ```
   
-
-
 </p></details>
 
 
