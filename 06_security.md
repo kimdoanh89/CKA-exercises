@@ -153,6 +153,8 @@ Kubernetes cluster and set a 45 day expiration.
 
 
 ## 3. Know how to configure network policies
+### Network Policy
+
 ## 4. Create and manage TLS certificates for cluster components
 
 ### View the certificates
@@ -172,15 +174,11 @@ Kubernetes cluster and set a 45 day expiration.
 
 
 
-
-
-
-
 ## 5. Work with images securely
 Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 ### Image security
 - Create a deployment name web with image nginx:alpine, scale to replicas=2
-- We decided to use a modified version of the application from an internal private registry. Update the image of the deployment to use a new image from myprivateregistry.com:5000
+- Use a modified version of the application from an internal private registry. Update the image of the deployment to use a new image from myprivateregistry.com:5000
 - Create a secret object with the credentials required to access the registry:
   - Name: private-reg-cred 
   - Username: dock_user 
@@ -233,8 +231,8 @@ Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/pul
 Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).
 
 **Note**: 
-- You may choose to configure the security settings at a container level or at a pod level.
-- The User ID defined in the securityContext of the container overrides the User ID in the POD.
+- **You may choose to configure the security settings at a container level or at a pod level.**
+- **The User ID defined in the securityContext of the container overrides the User ID in the POD.**
 ### Security Context
 - Create a pod 'ubuntu-sleeper' with image 'ubuntu', command 'sleep 4800'
 - Check who run the container?
