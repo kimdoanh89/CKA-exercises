@@ -97,8 +97,45 @@ Kubernetes cluster and set a 45 day expiration.
 - Create DevTrang.key and DevTrang.csr with openssl.
 - Create a Certificate signing request (csr) object from DevTrang.csr to send to the Kubernetes API ([here](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#create-a-certificate-signing-request-object-to-send-to-the-kubernetes-api)).
 - Get csr and approve it.
+- Download the certificate and use it.
 <details><summary>show</summary><p>
   
+- Create new user and password
+  ```bash
+  sudo useradd DevTrang -s /bin/bash
+  sudo passwd
+  ```
+- Create private key and csr
+  ```bash
+  openssl genrsa -out DevTrang.key 2048
+  openssl req -new -key DevTrang.key -out DevTrang.csr --subj "/CN=DevTrang/O=development"
+  ```
+- Create csr object in Kubernetes
+  - Search kubernetes.io for csr [here](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#create-a-certificate-signing-request-object-to-send-to-the-kubernetes-api).
+  - Copy and paste to terminal, edit to use DevTrang.csr
+  ```bash
+  cat <<EOF | kubectl apply -f -
+  apiVersion: certificates.k8s.io/v1beta1
+  kind: CertificateSigningRequest
+  metadata:
+    name: DevTrang
+  spec:
+    request: $(cat DevTrang.csr | base64 | tr -d '\n')
+    usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  EOF
+  ```
+- Get csr and approve it.
+  ```bash
+  kubectl get csr
+  kubectl certificate approve DevTrang
+  ```
+- Download and use it.
+  ```bash
+  kubectl get csr DevTrang -o jsonpath='{.status.certificate}' | base64 --decode > DevTrang.crt
+  ```
 
 
 </p></details>
