@@ -12,7 +12,7 @@ Kubernetes cluster and set a 45 day expiration.
   - resources: "deployments" , "replicasets" , "pods"
   - verbs: ["*"]
 - Create a rolebinding name developer-role-binding in development namespace: role developer and user DevDan
-- In DevDan-context, Create a new deployment nginx with image nginx, verify it exists, then delete it 
+- In DevDan-context, create a new deployment nginx with image nginx, verify it exists, then delete it 
 - Create context name ProdDan-context with cluster kubernetes, namespace production, and user DevDan
 - Create a role name dev-prod in production namespace:
   - apiGroups: "", "extensions", "apps"
@@ -21,8 +21,74 @@ Kubernetes cluster and set a 45 day expiration.
 - Create a rolebinding name production-role-binding in production namespace: role dev-prod and user DevDan
 <details><summary>show</summary><p>
   
+- Create two namespaces
+  ```bash
+  kubectl create ns production
+  kubectl create ns development
+  ```
+- Create a new user and password
+  ```bash
+  sudo useradd DevDan -s /bin/bash
+  sudo passwd DevDan
+  ```
+- Generate private key then csr for DevDan
+  ```bash
+  openssl genrsa -out DevDan.key 2048
+  openssl req -new -key DevDan.key -out DevDan.csr -subj "/CN=DevDan/O=development"
+  # To view the csr
+  openssl req -in DevDan.csr -text -noout
+  ```
+- Generate the self-signed certificate
+  ```bash
+  sudo openssl x509 -req -in DevDan.csr -out DevDan.crt \
+       -CA /etc/kubernetes/pki/ca.crt \
+       -CAkey /etc/kubernetes/pki/ca.key \
+       -CAcreateserial -days 45
+  # To view the certificate
+  openssl x509 -in DevDan.crt -text -noout
+  ```
+- Update the access config file to add user DevDan
+  ```bash
+  kubectl config set-credentials DevDan --client-certificate=/home/lkd/DevDan.crt --client-key=/home/lkd/DevDan.key
+  ```
+- Create context name DevDan-context
+  ```bash
+  kubectl config set-context DevDan-context --user=DevDan --cluster=kubernetes --namespace=development
+  kubectl config get-contexts
+  ```
+- Create role 'developer'
+  ```bash
+  kubectl create role --resource=pods --verb="*" --dry-run -o yaml > role-dev.yaml
+  vim role-dev.yaml
+  kubectl create -f role-dev.yaml
+  ```
+  ```yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    name: developer
+    namespace: development
+  rules:
+  - apiGroups: ["", "extensions", "apps"]
+    resources: ["pods", "deployments", "replicasets"]
+    verbs: ["*"]
+  ```
+- Create rolebinding 'developer-role-binding'
+  ```bash
+  kubectl create rolebinding developer-role-binding --role=developer \
+          --user=DevDan -n development --dry-run -o yaml > developer-role-binding.yaml
+  kubectl create -f developer-role-binding.yaml
+  ```
+- In DevDan-context, create a new deployment nginx with image nginx, verify it exists, then delete it
+  ```bash
+  kubectl --context=DevDan-context create deployment nginx --image=nginx
+  kubectl --context=DevDan-context get deployment
+  kubectl --context=DevDan-context delete deployment nginx
+  ```
 
 
+  
+  
 </p></details>
 
 ## 2. Understand Kubernetes security primitives
