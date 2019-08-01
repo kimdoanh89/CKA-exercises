@@ -179,8 +179,14 @@ Kubernetes cluster and set a 45 day expiration.
 
 
 ## 3. Know how to configure network policies
+Reference is [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
+Study the kubernetes network policy recipes [here](https://github.com/ahmetb/kubernetes-network-policy-recipes).
 ### Network Policy
-
+- Create a network policy to allow traffic from the 'Internal' application only to the 'payroll-service' and 'db-service'
+ - Policy Name: internal-policy, Policy Types: Egress
+ - Egress Allow: payroll, Payroll Port: 8080
+ - Egress Allow: mysql, MYSQL Port: 3306
+ 
 <details><summary>show</summary><p>
   
 
