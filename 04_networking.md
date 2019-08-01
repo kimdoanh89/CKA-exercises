@@ -91,7 +91,7 @@ ls /etc/cni/net.d/
 </p></details>
 
 ## 6. Know how to configure and use the cluster DNS
-
+### Explore CoreDns
 <details><summary>show</summary><p>
   
 
