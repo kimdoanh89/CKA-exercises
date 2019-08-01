@@ -59,7 +59,15 @@ ls /etc/cni/net.d/
 </p></details>
 
 ## 3. Understand Service Networking
-
+### Service networking
+- What network range are the nodes in the cluster part of? Run the command ip addr and look at the IP address assigned to the ens3 interfaces. Derive network range from that.
+- What is the range of IP addresses configured for PODs on this cluster?
+  - For weave-net, Check the weave pods logs using command kubectl logs <weave-pod-name> weave -n kube-system and look for ipalloc-range
+  - For calico, check the calico.yaml file and looking for CALICO_IPV4POOL_CIDR
+- What is the IP Range configured for the services within the cluster?
+  - Inspect the setting on kube-api server by running on command ps -aux | grep kube-api
+- What type of proxy is the kube-proxy configured to use?
+  - Check the logs of the kube-proxy pods. Command: kubectl logs kube-proxy-ft6n7 -n kube-system
 <details><summary>show</summary><p>
   
 
