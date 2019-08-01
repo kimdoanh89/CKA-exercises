@@ -28,7 +28,7 @@ ls /etc/cni/net.d/
 
 </p></details>
 
-### Choosing different CNI networking solution
+### Choosing different CNI networking solutions
 - Deploy weave-net networking solution to the cluster
 - Deploy calico networking solution to the cluster
 - Deploy flannel networking solution to the cluster
