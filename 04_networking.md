@@ -28,6 +28,28 @@ ls /etc/cni/net.d/
 
 </p></details>
 
+### Choosing different CNI networking solution
+- Deploy weave-net networking solution to the cluster
+- Deploy calico networking solution to the cluster
+- Deploy flannel networking solution to the cluster
+
+<details><summary>show</summary><p>
+
+- Deploy weave-net. Documentation is [here](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/).
+  ```bash
+  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+  ```
+- Deploy calico. Documentation is [here](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/).
+  ```bash
+  kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+  ```
+- Deploy flannel. Documentation is [here](https://github.com/coreos/flannel#deploying-flannel-manually).
+  ```bash
+  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  ```
+
+</p></details>
+
 ## 2. Understand Pod networking concepts
 
 <details><summary>show</summary><p>
