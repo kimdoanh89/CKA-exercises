@@ -329,6 +329,13 @@ Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/sec
       name: sidecar
       command: ["sleep","5000"]
   ```
+  Check who run the container
+  ```bash
+  kubectl exec ubuntu-sleeper -it -c sidecar -- sh
+  ps aux
+  kubectl exec ubuntu-sleeper -it -c ubuntu-sleeper -- sh
+  ps aux
+  ```
 - Add capability
   ```yaml
   spec:
