@@ -268,14 +268,84 @@ Reference is [here](https://kubernetes.io/docs/tasks/configure-pod-container/sec
 - **The User ID defined in the securityContext of the container overrides the User ID in the POD.**
 ### Security Context
 - Create a pod 'ubuntu-sleeper' with image 'ubuntu', command 'sleep 4800'
-- Check who run the container?
+- What is the user used to execute the sleep process within the 'ubuntu-sleeper' pod?
 - Edit the pod 'ubuntu-sleeper' to run the sleep process with user ID 1010.
-- Update pod 'ubuntu-sleeper' to run as Root user and with the 'SYS_TIME' capability.
+- Edit the pod 'ubuntu-sleeper'
+  - Add another container name 'sidecar', image 'ubuntu', command sleep 5000
+  - Add securityContext to pod level, runAsUser 1001
+  - Check who run container 'ubuntu-sleeper', who run 'sidecar'
+- Update pod 'ubuntu-sleeper', remove sidecar, to run as Root user and with the 'SYS_TIME' capability.
+  - Now try to run the below command in the pod to set the date (date -s '19 APR 2012 11:14:00')
 
 <details><summary>show</summary><p>
   
-
-
+- Create a pod 'ubuntu-sleeper'
+  ```bash
+  kubectl run ubuntu-sleeper --generator=run-pod/v1 --image=ubuntu --dry-run -o yaml > ubuntu-sleeper.yaml
+  vim ubuntu-sleeper.yaml
+  kubectl create -f ubuntu-sleeper.yaml
+  ```
+  ```yaml
+  spec:
+    containers:
+    - image: ubuntu
+      name: ubuntu-sleeper
+      command:
+      - sleep
+      - "4800" 
+  ```
+- What is the user used to execute the sleep process within the 'ubuntu-sleeper' pod?
+  ```bash
+  kubectl exec ubuntu-sleeper -it --sh
+  ps aux
+  ```
+- Edit the pod 'ubuntu-sleeper' to run the sleep process with user ID 1010.
+  ```yaml
+  spec:
+    containers:
+    - image: ubuntu
+      name: ubuntu-sleeper
+      command:
+      - sleep
+      - "4800"
+      securityContext:
+        runAsUser: 1010
+  ```
+- Edit the pod 'ubuntu-sleeper' to multi-container pod
+  ```yaml
+  spec:
+    securityContext:
+      runAsUser: 1001
+    containers:
+    - image: ubuntu
+      name: ubuntu-sleeper
+      command:
+      - sleep
+      - "4800"
+      securityContext:
+        runAsUser: 1010
+      resources: {}
+    - image: ubuntu
+      name: sidecar
+      command: ["sleep","5000"]
+  ```
+- Add capability
+  ```yaml
+  spec:
+    containers:
+    - image: ubuntu
+      name: ubuntu-sleeper
+      command:
+      - sleep
+      - "4800"
+      securityContext:
+        capabilities:
+          add: ["SYS_TIME"]
+  ```
+  ```bash
+  kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'
+  ```
+  
 </p></details>
 
 
