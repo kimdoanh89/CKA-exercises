@@ -83,9 +83,107 @@ ls /etc/cni/net.d/
 </p></details>
 
 ## 5. Know how to use Ingress rules
-
+### Traefik ingress controller
+Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
+- Create a ClusterRole 'traefik-ingress-controller' with two rules:
+  - apiGroup: "", resources: services, endpoints, secrets, verbs: get, list, watch
+  - apiGroup: extensions, resources: ingresses, verbs: get, list, watch
+- Create  a ClusterRoleBiding 'traefik-ingress-controller' that binds the ClusterRole 'traefik-ingress-controller' and the service account 'traefik-ingress-controller'.
+- Deploy Traefik using the DaemonSet:
+  - Download and save the ds file using [this link](https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-ds.yaml).
+  - Edit the file, delete securityContext lines and add 'hostNetwork: true' line that lines up with containers: line.
+  - Create the ingress controller with kubectl create -f .
+- Create a deployment name 'secondapp', with image 'nginx', then expose the new server as NodePort, port 80.
+- Create an Ingress 'ingress-test', with the rules:
+  - Host: www.secondapp.com
+  - Backend: secondapp service, port 80
+- Check with curl -H "Host: www.secondapp.com" http://20.0.0.11/
+- Create a deployment name 'thirdpage', with image 'nginx', then expose the new server as NodePort, port 80.
+- Execute the thirdpage pod to modify the title of the webpage to 'Third Page' locate at /usr/share/nginx/html/index.html
+- Modify the ingress-test, adding second rules:
+  - Host: www.thirdpage.com
+  - Backend: thirdpage service, port 80
+- Check with curl -H "Host: www.thirdpage.com" http://20.0.0.11/
+ 
 <details><summary>show</summary><p>
-  
+- Create a ClusterRole 'traefik-ingress-controller'
+  ```bash
+  kubectl create clusterrole traefik-ingress-controller --resource=ingresses --verb=get,list,watch \
+          --dry-run -o yaml > traefik-cluster-role.yaml
+  vim traefik-cluster-role.yaml
+  kubectl create -f traefik-cluster-role.yaml
+  ```
+  ```yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    name: traefik-ingress-controller
+  rules:
+  - apiGroups:
+    - extensions
+    resources:
+    - ingresses
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - services
+    - endpoints
+    - secrets
+    verbs:
+    - get
+    - list
+    - watch
+  ```
+- Create a ClusterRoleBinding 'traefik-ingress-controller'
+  ```bash
+  kubectl create clusterrolebinding traefik-ingress-controller --clusterrole=traefik-ingress-controller \
+          --serviceaccount=kube-system:traefik-ingress-controller
+  ```
+- Deploy Traefik using the DaemonSet:
+  ```bash
+  wget https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-ds.yaml -O traefik-ds.yaml
+  vim traefik-ds.yaml
+  kubectl create -f traefik-ds.yaml
+  ```
+- Create deployment secondapp, thirdpage
+  ```bash
+  kubectl create deployment secondapp --image=nginx
+  kubectl expose deployment secondapp --type=NodePort --port=80
+  ```
+- Create an Ingress 'ingress-test': reference is [here](https://kubernetes.io/docs/concepts/services-networking/ingress/#name-based-virtual-hosting).
+  ```bash
+  vim ingress-test.yaml
+  ```
+  ```yaml
+  apiVersion: networking.k8s.io/v1beta1
+  kind: Ingress
+  metadata:
+    name: ingress-test
+  spec:
+    rules:
+    - host: www.secondapp.com
+      http:
+        paths:
+        - backend:
+            serviceName: secondapp
+            servicePort: 80
+  ```
+  ```bash
+  kubectl create -f ingress-test.yaml
+  curl -H "Host: www.secondapp.com" http://20.0.0.11
+  ```
+- Create deployment secondapp, thirdpage
+  ```bash
+  kubectl create deployment secondapp --image=nginx
+  kubectl expose deployment secondapp --type=NodePort --port=80
+  ```
+- Execute the thirdpage pod to modify nginx webpage title.
+  ```bash
+  ```
 
 
 </p></details>
