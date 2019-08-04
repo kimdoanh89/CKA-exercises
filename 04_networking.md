@@ -287,7 +287,7 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
   kubectl -n app-space expose deployment webapp-video --type=ClusterIP --port=8080 --name=video-service
   kubectl -n app-space expose deployment webapp-wear --type=ClusterIP --port=8080 --name=wear-service
   ```
-- Create ingress name 'ingress-wear-watch':
+- Create ingress name 'ingress-wear-watch': **ANNOTATIONS is very IMPORTANT**. Reference is [here](https://docs.traefik.io/user-guide/kubernetes/#path-based-routing).
   ```bash
   vim ingress-wear-watch.yaml
   ```
