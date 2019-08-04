@@ -277,6 +277,7 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
     namespace: app-space
     annotations:
       kubernetes.io/ingress.class: traefik
+      traefik.frontend.rule.type: PathPrefixStrip
   spec:
     rules:
     - http:
