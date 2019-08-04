@@ -106,6 +106,7 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
 - Check with curl -H "Host: www.thirdpage.com" http://20.0.0.11/
  
 <details><summary>show</summary><p>
+  
 - Create a ClusterRole 'traefik-ingress-controller'
   ```bash
   kubectl create clusterrole traefik-ingress-controller --resource=ingresses --verb=get,list,watch \
@@ -149,7 +150,7 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
   vim traefik-ds.yaml
   kubectl create -f traefik-ds.yaml
   ```
-- Create deployment secondapp, thirdpage
+- Create deployment secondapp
   ```bash
   kubectl create deployment secondapp --image=nginx
   kubectl expose deployment secondapp --type=NodePort --port=80
@@ -176,15 +177,55 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
   kubectl create -f ingress-test.yaml
   curl -H "Host: www.secondapp.com" http://20.0.0.11
   ```
-- Create deployment secondapp, thirdpage
+- Create deployment thirdpage, edit the deployment to add the [custom dnspolicy](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-config).
   ```bash
-  kubectl create deployment secondapp --image=nginx
-  kubectl expose deployment secondapp --type=NodePort --port=80
+  kubectl create deployment thirdpage --image=nginx
+  kubectl expose deployment thirdpage --type=NodePort --port=80
+  kubectl edit deployement thirdpage
+  ```
+  ```yaml
+      spec:
+        containers:
+        - image: nginx
+          imagePullPolicy: Always
+          name: nginx
+        dnsConfig:
+          nameservers:
+          - 8.8.8.8
+        dnsPolicy: None
   ```
 - Execute the thirdpage pod to modify nginx webpage title.
   ```bash
+  kubectl exec thirdpage-658458994f-77mhs -it -- /bin/bash
+  apt-get update
+  apt-get install vim -y
+  vim /usr/share/nginx/html/index.html
   ```
-
+- Modify the ingress-test, adding second rules:
+  ```bash
+  kubectl edit ingress ingress-test
+  ```
+  ```yaml
+  spec:
+    rules:
+    - host: www.secondapp.com
+      http:
+        paths:
+        - backend:
+            serviceName: secondapp
+            servicePort: 80
+    - host: www.thirdpage.com
+      http:
+        paths:
+        - backend:
+            serviceName: thirdpage
+            servicePort: 80
+    ```
+- Check with curl
+  ```bash
+  curl -H "Host: www.thirdpage.com" http://20.0.0.11
+  curl -H "Host: www.secondapp.com" http://20.0.0.11
+  ```
 
 </p></details>
 
