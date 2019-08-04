@@ -83,6 +83,28 @@ ls /etc/cni/net.d/
 </p></details>
 
 ## 5. Know how to use Ingress rules
+Note that the innotation in setting the Ingress Controller in very **IMPORTANT**: Reference is [here](https://kubernetes.github.io/ingress-nginx/user-guide/multiple-ingress/). We can select between gce/nginx/traefik.
+
+For instance,
+
+```yaml
+metadata:
+  name: foo
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+```
+
+will target the GCE controller, forcing the nginx controller to ignore it, while an annotation like
+
+```yaml
+metadata:
+  name: foo
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+```
+
+will target the nginx controller, forcing the GCE controller to ignore it.
+
 ### Traefik ingress controller
 Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
 - Create a ClusterRole 'traefik-ingress-controller' with two rules:
