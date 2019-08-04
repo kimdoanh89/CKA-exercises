@@ -229,6 +229,77 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
 
 </p></details>
 
+### Nginx ingress controller
+- Create 2 new namespaces 'app-space', 'critical-space'
+- Create 4 deployments: 
+  - default-backend (image: kodekloud/ecommerce:404),
+  - webapp-food (image: kodekloud/ecommerce:food), 
+  - webapp-video (image: kodekloud/ecommerce:video), 
+  - webapp-wear (image: kodekloud/ecommerce:apparels).
+- Expose 4 deployments of type ClusterIP:
+  - default-http-backend: port 80
+  - food-service: port 8080
+  - video-service: port 8080
+  - wear-service: port 8080
+- Create ingress name 'ingress-wear-watch' in 'app-space', to have the service at different paths: /wear, /stream, /eat.
+- Create deployment: webapp-pay (image: kodekloud/ecommerce:pay) in 'critical-space', expose as 'pay-service' at port 8282.
+- Create ingress name 'ingress-pay' in 'critical-space', to have the service at path: /pay.
+<details><summary>show</summary><p>
+  
+- Create two namespaces:
+  ```bash
+  kubectl create ns app-space
+  kubectl create ns critical-space
+  ```
+- Create 4 deployments
+  ```bash
+  kubectl create deployment default-backend --image=kodekloud/ecommerce:404 --namespace=app-space
+  kubectl create deployment webapp-food --image=kodekloud/ecommerce:food --namespace=app-space
+  kubectl create deployment webapp-video --image=kodekloud/ecommerce:video --namespace=app-space
+  kubectl create deployment webapp-wear --image=kodekloud/ecommerce:apparels --namespace=app-space
+  ```
+- Expose 4 deployments:
+  ```bash
+  kubectl -n app-space expose deployment default-backend --type=ClusterIP --port=80 --name= default-http-backend
+  kubectl -n app-space expose deployment webapp-food --type=ClusterIP --port=8080 --name=food-service
+  kubectl -n app-space expose deployment webapp-video --type=ClusterIP --port=8080 --name=video-service
+  kubectl -n app-space expose deployment webapp-wear --type=ClusterIP --port=8080 --name=wear-service
+  ```
+- Create ingress name 'ingress-wear-watch':
+  ```bash
+  vim ingress-wear-watch.yaml
+  ```
+  ```yaml
+  apiVersion: networking.k8s.io/v1beta1
+  kind: Ingress
+  metadata:
+    name: ingress-wear-watch
+    namespace: app-space
+    annotations:
+      kubernetes.io/ingress.class: traefik
+  spec:
+    rules:
+    - http:
+        paths:
+        - path: /wear
+          backend:
+            serviceName: wear-service
+            servicePort: 8080
+        - path: /stream
+          backend:
+            serviceName: video-service
+            servicePort: 8080
+        - path: /eat
+          backend:
+            serviceName: food-service
+            servicePort: 8080
+  ```
+  ```bash
+  kubectl create -f ingress-wear-watch.yaml
+  ```
+
+</p></details>
+
 ## 6. Know how to configure and use the cluster DNS
 ### Explore CoreDns
 <details><summary>show</summary><p>
