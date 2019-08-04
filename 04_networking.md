@@ -260,7 +260,7 @@ Installation guide is [here](https://docs.traefik.io/user-guide/kubernetes/).
   ```
 - Expose 4 deployments:
   ```bash
-  kubectl -n app-space expose deployment default-backend --type=ClusterIP --port=80 --name= default-http-backend
+  kubectl -n app-space expose deployment default-backend --type=ClusterIP --port=80 --name=default-http-backend
   kubectl -n app-space expose deployment webapp-food --type=ClusterIP --port=8080 --name=food-service
   kubectl -n app-space expose deployment webapp-video --type=ClusterIP --port=8080 --name=video-service
   kubectl -n app-space expose deployment webapp-wear --type=ClusterIP --port=8080 --name=wear-service
