@@ -385,6 +385,8 @@ Look in to the file /var/lib/kubelet/config.yaml, looking for staticPodPath
 staticPodPath: /etc/just-to-mess-with-you
 ```
 
+Run the command ps -aux | grep kubelet and identify the config file - --config=/var/lib/kubelet/config.yaml. Then check in the config file for staticPdPath.
+
 </p>
 </details>
 
