@@ -385,7 +385,9 @@ Look in to the file /var/lib/kubelet/config.yaml, looking for staticPodPath
 staticPodPath: /etc/just-to-mess-with-you
 ```
 
-Run the command ps -aux | grep kubelet and identify the config file - --config=/var/lib/kubelet/config.yaml. Then check in the config file for staticPdPath.
+- Run the command ps -aux | grep kubelet and identify the config file - --config=/var/lib/kubelet/config.yaml. Then check in the config file for staticPdPath.
+
+- Identify which node the static pod is created on, ssh to the node and delete the pod definition file. If you don't know the IP of the node, run the kubectl get nodes -o wide command and identify the IP. Then SSH to the node using that IP. For static pod manifest path look at the file /var/lib/kubelet/config.yaml on node01
 
 </p>
 </details>
