@@ -96,6 +96,18 @@ kubectl expose pod redis --name redis-service --port=6379 -l tier=db
 </p>
 </details>
 
+### How a pod in a name space reach the service in another namespace (for example: dev namespace)
+<details><summary>show</summary>
+<p>
+
+using something like:
+```bash
+db-service.dev.src.cluster.local
+```
+
+</p>
+</details>
+
 
 ## 2.Understand the Kubernetes cluster architecture
 ## 3.Understand Services and other network primitives
