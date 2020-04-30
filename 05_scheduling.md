@@ -100,6 +100,7 @@ sudo docker ps | wc -l
 ```
 ```bash
 kubectl delete deployment taint-deployment
+kubectl taint node worker1 lkd=value:PreferNoSchedule- # remove taint
 kubectl taint node worker1 lkd=value:NoSchedule
 kubectl describe node | grep Taint
 kubectl create -f taint.yaml
@@ -108,6 +109,7 @@ sudo docker ps | wc -l
 ```
 ```bash
 kubectl delete deployment taint-deployment
+kubectl taint node worker1 lkd=value:NoSchedule- # remove taint
 kubectl taint node worker1 lkd=value:NoExecute
 kubectl describe node | grep Taint
 kubectl create -f taint.yaml
