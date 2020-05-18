@@ -273,10 +273,12 @@ A tutorial of how to use and config Secrets is [here](https://kubernetes.io/docs
 - Create a multi-container pod with 2 containers (Name: yellow, Container 1 Name: lemon, Container 1 Image: busybox, Container 2 Name: gold ,Container 2 Image: redis).
 <details><summary>show</summary>
 <p>
+
 ```bash
 kubectl run yellow --generator=run-pod/v1 --image=busybox --dry-run -o yaml > yellow.yaml
 vi yellow.yaml
 ```
+
 ```yaml
 apiVersion: v1
 kind: Pod
